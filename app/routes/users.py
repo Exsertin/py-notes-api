@@ -7,7 +7,7 @@ from datetime import timedelta
 router = APIRouter()
 
 @router.post("/register", response_model=schemas.User)
-def register(user: schemas.UserCreate, db: Session = Depends(database.SessionLocal)):
+def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.username == user.username).first()
 
     if db_user:
@@ -22,7 +22,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.SessionLoc
     return new_user
 
 @router.post("/token")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.SessionLocal)):
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
 
     if not user or not auth.verify_password(form_data.password, user.hashed_password):

@@ -6,7 +6,7 @@ from typing import List
 router = APIRouter(prefix="/notes", tags=["notes"])
 
 @router.post("/", response_model=schemas.Note)
-def create_note(note: schemas.NoteCreate, db: Session = Depends(database.SessionLocal), current_user: models.User = Depends(auth.get_current_user)):
+def create_note(note: schemas.NoteCreate, db: Session = Depends(database.get_db), current_user: models.User = Depends(auth.get_current_user)):
     db_note = models.Note(**note.dict(), owner_id=current_user.id)
     db.add(db_note)
     db.commit()
@@ -15,5 +15,5 @@ def create_note(note: schemas.NoteCreate, db: Session = Depends(database.Session
     return db_note
 
 @router.get("/", response_model=List[schemas.Note])
-def get_notes(db: Session = Depends(database.SessionLocal), current_user: models.User = Depends(auth.get_current_user)):
+def get_notes(db: Session = Depends(database.get_db), current_user: models.User = Depends(auth.get_current_user)):
     return db.query(models.Note).filter(models.Note.owner_id == current_user.id).all()
