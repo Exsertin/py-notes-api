@@ -13,7 +13,7 @@ SessionLocal = sessionmaker(class_=Session, autocommit=False, autoflush=False, b
 Base = declarative_base()
 
 def get_db():
-    db = SessionLocal
+    db = SessionLocal()
 
     try:
         yield db
