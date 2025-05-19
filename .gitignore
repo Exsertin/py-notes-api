@@ -1,0 +1,5 @@
+.venv
+.idea
+notes.db
+.env
+__pycache__
